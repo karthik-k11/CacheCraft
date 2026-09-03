@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 
-from simulator import simulate_lru
+from simulator import simulate_lru, simulate_fifo
 
 
 app = Flask(__name__)
@@ -25,10 +25,14 @@ def simulate():
     if not isinstance(capacity, int) or capacity < 1:
         return jsonify({"error": "Cache capacity must be at least 1."}), 400
 
-    if algorithm != "LRU":
-        return jsonify({"error": "Only LRU is available in this milestone."}), 400
+    if algorithm == "LRU":
+        result = simulate_lru(requests, capacity)
 
-    result = simulate_lru(requests, capacity)
+    elif algorithm == "FIFO":
+        result = simulate_fifo(requests, capacity)
+
+    else:
+        return jsonify({"error": "Unsupported cache algorithm."}), 400
 
     return jsonify(result)
 
