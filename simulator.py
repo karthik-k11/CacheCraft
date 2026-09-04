@@ -1,4 +1,5 @@
 from algorithms import LRUCache, FIFOCache
+from metrics import calculate_metrics
 
 
 def simulate_lru(requests, capacity):
@@ -22,12 +23,16 @@ def simulate_lru(requests, capacity):
 
         events.append(event)
 
+    metrics = calculate_metrics(
+        len(requests),
+        hits,
+        misses,
+        evictions
+    )
+
     return {
         "events": events,
-        "total_requests": len(requests),
-        "hits": hits,
-        "misses": misses,
-        "evictions": evictions
+        **metrics
     }
 
 
@@ -52,10 +57,14 @@ def simulate_fifo(requests, capacity):
 
         events.append(event)
 
+    metrics = calculate_metrics(
+        len(requests),
+        hits,
+        misses,
+        evictions
+    )
+
     return {
         "events": events,
-        "total_requests": len(requests),
-        "hits": hits,
-        "misses": misses,
-        "evictions": evictions
+        **metrics
     }

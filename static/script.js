@@ -92,9 +92,11 @@ function displayResults(result) {
     document.getElementById("evictions").textContent =
         result.evictions;
 
-    document.getElementById("hit-ratio").textContent = "-";
+    document.getElementById("hit-ratio").textContent =
+        `${(result.hit_ratio * 100).toFixed(2)}%`;
 
-    document.getElementById("miss-ratio").textContent = "-";
+    document.getElementById("miss-ratio").textContent =
+        `${(result.miss_ratio * 100).toFixed(2)}%`;
 
     displayEvents(result.events);
 }
