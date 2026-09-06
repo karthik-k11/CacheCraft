@@ -70,6 +70,10 @@
                 Start Simulation
             </button>
 
+            <button id="compare-button" class="secondary-button">
+                Compare LRU vs FIFO
+            </button>
+
         </section>
 
 
@@ -120,6 +124,86 @@
 
             <div id="cache-display" class="cache-display">
                 <span>No simulation running.</span>
+            </div>
+
+        </section>
+
+
+        <section class="card comparison-card">
+
+            <h2>LRU vs FIFO Comparison</h2>
+
+            <div class="comparison-grid">
+
+                <div class="comparison-column">
+                    <h3>LRU</h3>
+
+                    <p>
+                        Requests:
+                        <span id="lru-requests">-</span>
+                    </p>
+
+                    <p>
+                        Hits:
+                        <span id="lru-hits">-</span>
+                    </p>
+
+                    <p>
+                        Misses:
+                        <span id="lru-misses">-</span>
+                    </p>
+
+                    <p>
+                        Hit Ratio:
+                        <span id="lru-hit-ratio">-</span>
+                    </p>
+
+                    <p>
+                        Miss Ratio:
+                        <span id="lru-miss-ratio">-</span>
+                    </p>
+
+                    <p>
+                        Evictions:
+                        <span id="lru-evictions">-</span>
+                    </p>
+                </div>
+
+
+                <div class="comparison-column">
+                    <h3>FIFO</h3>
+
+                    <p>
+                        Requests:
+                        <span id="fifo-requests">-</span>
+                    </p>
+
+                    <p>
+                        Hits:
+                        <span id="fifo-hits">-</span>
+                    </p>
+
+                    <p>
+                        Misses:
+                        <span id="fifo-misses">-</span>
+                    </p>
+
+                    <p>
+                        Hit Ratio:
+                        <span id="fifo-hit-ratio">-</span>
+                    </p>
+
+                    <p>
+                        Miss Ratio:
+                        <span id="fifo-miss-ratio">-</span>
+                    </p>
+
+                    <p>
+                        Evictions:
+                        <span id="fifo-evictions">-</span>
+                    </p>
+                </div>
+
             </div>
 
         </section>

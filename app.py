@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 
-from simulator import simulate_lru, simulate_fifo
+from simulator import simulate_lru, simulate_fifo, compare_algorithms
 
 
 app = Flask(__name__)
@@ -33,6 +33,24 @@ def simulate():
 
     else:
         return jsonify({"error": "Unsupported cache algorithm."}), 400
+
+    return jsonify(result)
+
+
+@app.route("/api/compare", methods=["POST"])
+def compare():
+    data = request.get_json()
+
+    requests = data.get("requests", [])
+    capacity = data.get("capacity")
+
+    if not isinstance(requests, list) or not requests:
+        return jsonify({"error": "Request sequence cannot be empty."}), 400
+
+    if not isinstance(capacity, int) or capacity < 1:
+        return jsonify({"error": "Cache capacity must be at least 1."}), 400
+
+    result = compare_algorithms(requests, capacity)
 
     return jsonify(result)
 

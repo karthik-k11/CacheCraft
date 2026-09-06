@@ -68,3 +68,13 @@ def simulate_fifo(requests, capacity):
         "events": events,
         **metrics
     }
+
+
+def compare_algorithms(requests, capacity):
+    lru_result = simulate_lru(requests, capacity)
+    fifo_result = simulate_fifo(requests, capacity)
+
+    return {
+        "LRU": lru_result,
+        "FIFO": fifo_result
+    }
