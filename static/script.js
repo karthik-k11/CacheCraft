@@ -1,6 +1,14 @@
 const simulateButton = document.getElementById("simulate-button");
 const compareButton = document.getElementById("compare-button");
 
+const startStepButton = document.getElementById("start-step-button");
+const nextStepButton = document.getElementById("next-step-button");
+const resetStepButton = document.getElementById("reset-step-button");
+
+
+let stepEvents = [];
+let currentStep = 0;
+
 
 simulateButton.addEventListener("click", async function () {
     const requestSequence = document.getElementById("request-sequence").value;
@@ -119,6 +127,120 @@ compareButton.addEventListener("click", async function () {
         statusElement.textContent =
             "Unable to connect to the comparison server.";
     }
+});
+
+
+startStepButton.addEventListener("click", async function () {
+    const requestSequence = document.getElementById("request-sequence").value;
+
+    const cacheCapacity = Number(
+        document.getElementById("cache-capacity").value
+    );
+
+    const algorithm = document.getElementById("algorithm").value;
+
+    const statusElement = document.getElementById("simulation-status");
+
+
+    const requests = getRequests(requestSequence, cacheCapacity);
+
+    if (!requests) {
+        return;
+    }
+
+
+    statusElement.textContent =
+        "Preparing step-by-step simulation...";
+
+
+    try {
+        const response = await fetch("/api/simulate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                requests: requests,
+                capacity: cacheCapacity,
+                algorithm: algorithm
+            })
+        });
+
+
+        const result = await response.json();
+
+
+        if (!response.ok) {
+            statusElement.textContent = result.error;
+            return;
+        }
+
+
+        stepEvents = result.events;
+        currentStep = 0;
+
+
+        displayStep();
+
+
+        nextStepButton.disabled = false;
+        resetStepButton.disabled = false;
+        startStepButton.disabled = true;
+
+
+        statusElement.textContent =
+            `${algorithm} step-by-step simulation started.`;
+
+
+    } catch (error) {
+        console.error(error);
+
+        statusElement.textContent =
+            "Unable to connect to the simulation server.";
+    }
+});
+
+
+nextStepButton.addEventListener("click", function () {
+    if (currentStep >= stepEvents.length) {
+        return;
+    }
+
+
+    currentStep++;
+
+    displayStep();
+
+
+    if (currentStep >= stepEvents.length) {
+        nextStepButton.disabled = true;
+
+        document.getElementById("simulation-status").textContent =
+            "Step-by-step simulation completed.";
+    }
+});
+
+
+resetStepButton.addEventListener("click", function () {
+    stepEvents = [];
+    currentStep = 0;
+
+
+    document.getElementById("step-counter").textContent =
+        "No step-by-step simulation running.";
+
+
+    document.getElementById("step-display").innerHTML =
+        "<p>Click \"Start Step-by-Step\" to begin.</p>";
+
+
+    nextStepButton.disabled = true;
+    resetStepButton.disabled = true;
+    startStepButton.disabled = false;
+
+
+    document.getElementById("simulation-status").textContent =
+        "Step-by-step simulation reset.";
 });
 
 
@@ -249,4 +371,44 @@ function displayComparison(result) {
 
     document.getElementById("fifo-evictions").textContent =
         fifo.evictions;
+}
+
+
+function displayStep() {
+    const stepCounter = document.getElementById("step-counter");
+    const stepDisplay = document.getElementById("step-display");
+
+
+    if (currentStep === 0) {
+        stepCounter.textContent =
+            `Ready: ${stepEvents.length} requests`;
+
+        stepDisplay.innerHTML =
+            "<p>Click \"Next Step\" to process the first request.</p>";
+
+        return;
+    }
+
+
+    const event = stepEvents[currentStep - 1];
+
+
+    stepCounter.textContent =
+        `Step ${currentStep} of ${stepEvents.length}`;
+
+
+    const resultText = event.hit ? "HIT" : "MISS";
+
+
+    const evictionText = event.evicted
+        ? `<p><strong>Evicted:</strong> ${event.evicted}</p>`
+        : "<p><strong>Evicted:</strong> None</p>";
+
+
+    stepDisplay.innerHTML = `
+        <p><strong>Request:</strong> ${event.request}</p>
+        <p><strong>Result:</strong> ${resultText}</p>
+        <p><strong>Cache:</strong> [${event.cache.join(", ")}]</p>
+        ${evictionText}
+    `;
 }
