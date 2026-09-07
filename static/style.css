@@ -87,12 +87,25 @@ button:hover {
     background: #1d4ed8;
 }
 
+button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
 .secondary-button {
     background: #374151;
 }
 
 .secondary-button:hover {
     background: #1f2937;
+}
+
+.reset-button {
+    background: #6b7280;
+}
+
+.reset-button:hover {
+    background: #4b5563;
 }
 
 .metrics-grid {
@@ -163,6 +176,30 @@ button:hover {
     font-weight: bold;
 }
 
+.step-display {
+    min-height: 140px;
+    background: #f9fafb;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.step-display p {
+    margin-bottom: 8px;
+}
+
+#step-counter {
+    color: #6b7280;
+    margin-bottom: 15px;
+}
+
+.step-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
 #simulation-status {
     color: #6b7280;
 }
@@ -178,6 +215,10 @@ button:hover {
     }
 
     .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .step-buttons {
         grid-template-columns: 1fr;
     }
 
